@@ -11,13 +11,9 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
     }
     fun reiniciarJuego(){
         val palabra = repositorio.palabraRandom()
-        var guiones = " "
-        for ( i in 0 until palabra.length){
-            guiones += "_"
-        }
         _uiState.value = AhorcadoUiState(
             palabraSecreta = palabra,
-            palabraOculta = guiones,
+            palabraOculta = enmascarar(palabra, ""),
             letrasUsadas = " ",
             juegoTerminado = false,
             mensajeResultado = " "
@@ -32,14 +28,7 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         val letraCorrecta = estadoActual.palabraSecreta.contains(letra)
         val intentosNuevos = if (letraCorrecta) estadoActual.intentoRestante else estadoActual.intentoRestante -1
 
-        var nuevaPalabraOculta = " "
-        for (char in estadoActual.palabraSecreta){
-            if (char in letrasNuevas){
-                nuevaPalabraOculta += "$char"
-            }else{
-                nuevaPalabraOculta += "_ "
-            }
-        }
+        val nuevaPalabraOculta = enmascarar(estadoActual.palabraSecreta, letrasNuevas)
         val siGano = !nuevaPalabraOculta.contains("_")
         val siPerdio = intentosNuevos <= 0
         val finish = siGano || siPerdio
@@ -59,6 +48,16 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
             victoria = siGano,
             mensajeResultado = mensaje
         )
+    }
+
+    /**
+     * Unifica el formato de la palabra oculta: cada letra ocupa el mismo
+     * ancho, revelandola como "X " y oculta como "_ ".
+     */
+    private fun enmascarar(palabra: String, letrasUsadas: String): String {
+        return palabra.map { char ->
+            if (char in letrasUsadas) "$char " else "_ "
+        }.joinToString("")
     }
 
 }
