@@ -1,6 +1,5 @@
 package com.jp.myapplication.ahorcado
 
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -28,6 +27,7 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         val estadoActual = _uiState.value
         if (estadoActual.juegoTerminado || letra in estadoActual.letrasUsadas)
             return
+
         val letrasNuevas = estadoActual.letrasUsadas + letra
         val letraCorrecta = estadoActual.palabraSecreta.contains(letra)
         val intentosNuevos = if (letraCorrecta) estadoActual.intentoRestante else estadoActual.intentoRestante -1
@@ -46,10 +46,19 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
 
         var mensaje = ""
         if (siGano){
-            mensaje = "Haz adivinado la palabra, ¡FELICIDADES!"
+            mensaje = "Has adivinado la palabra, ¡FELICIDADES!"
         }else if (siPerdio){
-            mensaje = "Haz perdido el juego. La palbra era: ${estadoActual.palabraSecreta}"
+            mensaje = "Has perdido el juego. La palabra era: ${estadoActual.palabraSecreta}"
         }
+
+        _uiState.value = estadoActual.copy(
+            palabraOculta = nuevaPalabraOculta,
+            letrasUsadas = letrasNuevas,
+            intentoRestante = intentosNuevos,
+            juegoTerminado = finish,
+            victoria = siGano,
+            mensajeResultado = mensaje
+        )
     }
 
 }
