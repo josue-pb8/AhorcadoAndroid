@@ -14,12 +14,12 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         _uiState.value = AhorcadoUiState(
             palabraSecreta = palabra,
             palabraOculta = enmascarar(palabra, ""),
-            letrasUsadas = " ",
+            letrasUsadas = "",
             intentoRestante = AhorcadoUiState.INTENTOS_INICIALES,
             intentosTotales = AhorcadoUiState.INTENTOS_INICIALES,
             juegoTerminado = false,
             victoria = false,
-            mensajeResultado = " "
+            mensajeResultado = ""
         )
     }
     fun pulsarLetra(letra: Char){
@@ -36,11 +36,11 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         val siPerdio = intentosNuevos <= 0
         val finish = siGano || siPerdio
 
-        var mensaje = ""
-        if (siGano){
-            mensaje = "Has adivinado la palabra, ¡FELICIDADES!"
-        }else if (siPerdio){
-            mensaje = "Has perdido el juego. La palabra era: ${estadoActual.palabraSecreta}"
+        val mensaje = when {
+            siGano -> "Has adivinado la palabra, ¡FELICIDADES!"
+            siPerdio -> "Has perdido el juego. La palabra era: ${estadoActual.palabraSecreta}"
+            letraCorrecta -> "Correcto, la letra $letra está en la palabra"
+            else -> "La letra $letra no está en la palabra"
         }
 
         _uiState.value = estadoActual.copy(

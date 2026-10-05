@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jp.myapplication.ui.theme.ColorExito
 
 
 @Composable
@@ -50,7 +52,15 @@ fun AhorcadoPage (viewModel: AhorcadoViewModel = viewModel()){
         Spacer(modifier = Modifier.height(15.dp))
 
         if (state.mensajeResultado.isNotEmpty()) {
-            Text(text = state.mensajeResultado, fontSize = 18.sp)
+            Text(
+                text = state.mensajeResultado,
+                fontSize = 18.sp,
+                color = when {
+                    state.juegoTerminado && state.victoria -> ColorExito
+                    state.juegoTerminado -> MaterialTheme.colorScheme.error
+                    else -> MaterialTheme.colorScheme.onSurface
+                }
+            )
         }
         Spacer(modifier = Modifier.height(24.dp))
 
