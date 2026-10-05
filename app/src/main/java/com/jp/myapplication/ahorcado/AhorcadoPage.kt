@@ -37,7 +37,7 @@ fun AhorcadoPage (viewModel: AhorcadoViewModel = viewModel()){
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Text(text = "Intentos Restantes: ${state.intentoRestante}", fontSize = 18.sp)
+        Text(text = "Intentos Restantes: ${state.intentoRestante}/${state.intentosTotales}", fontSize = 18.sp)
 
         Spacer(modifier = Modifier.height(24.dp))
 

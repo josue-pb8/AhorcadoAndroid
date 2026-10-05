@@ -15,7 +15,10 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
             palabraSecreta = palabra,
             palabraOculta = enmascarar(palabra, ""),
             letrasUsadas = " ",
+            intentoRestante = AhorcadoUiState.INTENTOS_INICIALES,
+            intentosTotales = AhorcadoUiState.INTENTOS_INICIALES,
             juegoTerminado = false,
+            victoria = false,
             mensajeResultado = " "
         )
     }
@@ -41,7 +44,7 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         }
 
         _uiState.value = estadoActual.copy(
-            palabraOculta = nuevaPalabraOculta,
+            palabraOculta = if (siPerdio) revelar(estadoActual.palabraSecreta) else nuevaPalabraOculta,
             letrasUsadas = letrasNuevas,
             intentoRestante = intentosNuevos,
             juegoTerminado = finish,
@@ -58,6 +61,11 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         return palabra.map { char ->
             if (char in letrasUsadas) "$char " else "_ "
         }.joinToString("")
+    }
+
+    /** Muestra la palabra completa, usado cuando el jugador se queda sin intentos. */
+    private fun revelar(palabra: String): String {
+        return palabra.map { "$it " }.joinToString("")
     }
 
 }
