@@ -1,9 +1,13 @@
 package com.jp.myapplication.ahorcado
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoRepositorio()) {
+class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio) : ViewModel() {
     private val _uiState = MutableStateFlow(AhorcadoUiState())
     val uiState = _uiState.asStateFlow()
     init {
@@ -68,4 +72,10 @@ class AhorcadoViewModel(private val repositorio: AhorcadoRepositorio = AhorcadoR
         return palabra.map { "$it " }.joinToString("")
     }
 
+    companion object {
+        /** Unico punto donde se decide que dependencia se inyecta en la app. */
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer { AhorcadoViewModel(AhorcadoRepositorio()) }
+        }
+    }
 }

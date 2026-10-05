@@ -25,7 +25,7 @@ import com.jp.myapplication.ui.theme.ColorExito
 
 
 @Composable
-fun AhorcadoPage (viewModel: AhorcadoViewModel = viewModel()){
+fun AhorcadoPage (viewModel: AhorcadoViewModel = viewModel(factory = AhorcadoViewModel.Factory)){
     val state by viewModel.uiState.collectAsState()
 
     Column(
